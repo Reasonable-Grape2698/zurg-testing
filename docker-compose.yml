@@ -33,5 +33,25 @@ services:
       - zurg
     command: "mount zurg: /data --allow-other --allow-non-empty --dir-cache-time 10s --vfs-cache-mode full"
 
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    ports:
+      - 32400:32400
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - VERSION=docker
+      - PLEX_CLAIM=claim-xxxxxxxxxxxx
+    volumes:
+      - ./plexconfig:/config
+      - /mnt/zurg/:/media
+    restart: unless-stopped
+    depends_on:
+      - zurg
+      - rclone
+    network_mode: host
+
 volumes:
   zurgdata:
